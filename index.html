@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متابع المصروفات اليومية</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="firebase-config.js"></script>
+    <style>
+        /* Responsive Table */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px; /* يمنع التكسير المفرط */
+            background: rgba(30, 30, 30, 0.7);
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: #1e1e1e;
+            color: #bb86fc;
+            position: sticky;
+            top: 0;
+        }
+
+        /* Responsive Inputs */
+        .price {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .btnsearch {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btnsearch button {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .main-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 1rem;
+            }
+
+            .auth-buttons, .user-info {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .auth-buttons button, .user-info button {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
+            .crud {
+                padding: 0.5rem;
+            }
+
+            .inputs {
+                padding: 1rem;
+            }
+
+            input, select, button {
+                font-size: 0.95rem;
+                padding: 0.6rem;
+            }
+
+            .price {
+                grid-template-columns: 1fr;
+            }
+
+            .tips-box, .report {
+                padding: 1rem;
+            }
+
+            .searchBlock {
+                padding: 1rem;
+            }
+
+            #search {
+                margin-bottom: 10px;
+            }
+
+            .table-container {
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btnsearch button {
+                min-width: 100%;
+            }
+
+            th, td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            h1, h2, h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header غير ثابت -->
+    <header class="main-header">
+        <h1>📊  فلوسك فين؟</h1>
+        <div class="auth-buttons" id="auth-buttons">
+            <button onclick="window.location.href='login.html'">تسجيل دخول</button>
+            <button onclick="window.location.href='login.html#register'">إنشاء حساب</button>
+        </div>
+        <!-- أيقونة المستخدم بعد الدخول -->
+      <div class="user-avatar" id="user-avatar" style="display:none;" onclick="window.location.href='profile.html'">
+    <img id="user-avatar-img" src="personal-branding.gif" alt="الصورة الرمزية" class="avatar-img">
+    <span id="user-first-name">...</span>
+</div>
+    </header>
+
+    <div class="crud">
+        <div class="head">
+            <h2>ابدأ في تتبع مصروفاتك اليومية</h2>
+            <p id="guest-message">💡 سجل دخولك أو أنشئ حسابًا لحفظ بياناتك وتحليلها شهريًا!</p>
+        </div>
+
+        <div class="inputs">
+            <input type="text" placeholder="العنوان" id="title">
+            <div class="price">
+                <input onkeyup="getTotal()" type="number" placeholder="السعر" id="price" step="0.01">
+                <small id="total">0.00</small>
+            </div>
+            <input type="number" placeholder="العدد (اختياري)" id="count" value="1" min="1">
+            <select id="category"></select>
+            <button id="submit">إضافة مصروف</button>
+        </div>
+
+        <div id="monthly-report" class="report" style="display:none;"></div>
+
+        <div class="tips-box">
+            <h3>💡 نصائح من الإدارة</h3>
+            <p>• حاول تسجيل كل مصروف يوميًا قبل النوم.</p>
+            <p>• استخدم تصنيف "ترفيه" بحكمة — لا تجعله يتجاوز 15% من مرتبك!</p>
+            <p>• المصاريف العاجلة يجب أن تكون لها ميزانية طوارئ منفصلة.</p>
+        </div>
+
+        <div class="searchBlock">
+            <input onkeyup="searchData(this.value)" type="text" placeholder="بحث حسب العنوان..." id="search">
+            <div class="btnsearch">
+                <button onclick="getSearchMood('searchTitle')" id="searchTitle">بحث بالعنوان</button>
+                <button onclick="getSearchMood('searchCategory')" id="searchCategory">بحث بالتصنيف</button>
+            </div>
+
+            <div id="deleteAll"></div>
+
+            <!-- جدول داخل حاوية قابلة للتمرير -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>العنوان</th>
+                            <th>السعر</th>
+                            <th>الإجمالي</th>
+                            <th>التصنيف</th>
+                            <th>منجز؟</th>
+                            <th>ملاحظات</th>
+                            <th>تعديل</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        <!-- البيانات تُحمّل عبر JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                if (typeof forceUpdateUI === 'function') {
+                    forceUpdateUI();
+                }
+                if (typeof initApp === 'function' && window.currentUser) {
+                    initApp();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

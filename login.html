@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - متابع المصروفات</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="firebase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body class="auth-body">
+    <div id="particles-js"></div>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>مرحبًا بك في متابع المصروفات 🧾</h2>
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('login')">تسجيل دخول</button>
+                <button class="tab" onclick="switchTab('register')">إنشاء حساب</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login" class="form active">
+                <input type="email" id="login-email" placeholder="البريد الإلكتروني" required>
+                <input type="password" id="login-password" placeholder="كلمة المرور" required>
+                <button onclick="loginWithEmail()">دخول</button>
+                <p class="error" id="login-error"></p>
+                <p><a href="#" onclick="alert('نسيت كلمة المرور؟ هذه الميزة قيد التطوير')">نسيت كلمة المرور؟</a></p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register" class="form">
+                <input type="text" id="register-name" placeholder="الاسم الكامل" required>
+                <input type="email" id="register-email" placeholder="البريد الإلكتروني" required>
+                <input type="tel" id="register-phone" placeholder="رقم الهاتف (اختياري)">
+                <input type="password" id="register-password" placeholder="كلمة المرور" required>
+                <input type="password" id="register-confirm-password" placeholder="تأكيد كلمة المرور" required>
+                <input type="number" id="register-salary" placeholder="المرتب الشهري (اختياري)">
+                <button onclick="registerWithEmail()">إنشاء الحساب</button>
+                <p class="error" id="register-error"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        particlesJS.load('particles-js', 'particles.json', function() {
+            console.log('particles.js loaded');
+        });
+
+        // Switch tabs without module dependency
+        function switchTab(tabId) {
+            document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab[onclick*="${tabId}"]`).classList.add('active');
+        }
+
+        // Handle URL hash
+        window.addEventListener('load', () => {
+            if (window.location.hash === '#register') {
+                switchTab('register');
+            }
+        });
+    </script>
+</body>
+</html>

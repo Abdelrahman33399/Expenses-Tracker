@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسابي - متابع المصروفات</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <!-- Header غير ثابت -->
+    <header class="main-header">
+        <h1>📊 حسابي</h1>
+        <div class="profile-actions">
+            <button onclick="window.location.href='index.html'">الرئيسية</button>
+            <button onclick="logout()">تسجيل خروج</button>
+        </div>
+    </header>
+
+    <div class="crud">
+        <div class="head">
+            <h2>📋 معلومات حسابك</h2>
+        </div>
+
+        <div id="profile-content" style="display:none;">
+            <div class="profile-card">
+                <div class="profile-section">
+                    <h3>👤 البيانات الأساسية</h3>
+                    <p><strong>الاسم:</strong> <span id="profile-name">...</span></p>
+                    <p><strong>البريد الإلكتروني:</strong> <span id="profile-email">...</span></p>
+                    <p><strong>رقم الهاتف:</strong> <span id="profile-phone">غير محدد</span></p>
+                    <p><strong>المرتب الشهري:</strong> <span id="profile-salary">غير محدد</span> ج.م</p>
+                    <p><strong>تاريخ الإنشاء:</strong> <span id="profile-created-at">...</span></p>
+                </div>
+
+                <div class="profile-section">
+                    <h3>📂 التصنيفات المخصصة</h3>
+                    <ul id="categories-list" class="categories-list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="login-prompt" class="login-prompt">
+            <h3>🔐 يرجى تسجيل الدخول</h3>
+            <p>يجب تسجيل الدخول لعرض صفحة حسابك</p>
+            <button onclick="window.location.href='login.html'">تسجيل الدخول</button>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        async function loadUserProfile() {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    document.getElementById('profile-content').style.display = 'none';
+                    document.getElementById('login-prompt').style.display = 'block';
+                    return;
+                }
+
+                const userDoc = await db.collection("users").doc(user.uid).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    document.getElementById('profile-content').style.display = 'block';
+                    document.getElementById('login-prompt').style.display = 'none';
+
+                    document.getElementById('profile-name').textContent = userData.name || 'غير محدد';
+                    document.getElementById('profile-email').textContent = userData.email || 'غير محدد';
+                    document.getElementById('profile-phone').textContent = userData.phone || 'غير محدد';
+                    document.getElementById('profile-salary').textContent = userData.salary || 'غير محدد';
+
+                    if (userData.createdAt?.toDate) {
+                        document.getElementById('profile-created-at').textContent = 
+                            userData.createdAt.toDate().toLocaleDateString('ar-EG');
+                    } else {
+                        document.getElementById('profile-created-at').textContent = 'غير محدد';
+                    }
+
+                    const categoriesList = document.getElementById('categories-list');
+                    categoriesList.innerHTML = '';
+                    if (Array.isArray(userData.categories)) {
+                        userData.categories.forEach(cat => {
+                            const li = document.createElement('li');
+                            li.textContent = cat;
+                            categoriesList.appendChild(li);
+                        });
+                    } else {
+                        categoriesList.innerHTML = '<li>لا توجد تصنيفات</li>';
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading profile:", error);
+                alert("حدث خطأ أثناء تحميل بيانات الحساب");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof auth !== 'undefined') {
+                loadUserProfile();
+            } else {
+                setTimeout(loadUserProfile, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

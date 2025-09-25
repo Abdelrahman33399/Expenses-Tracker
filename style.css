@@ -1,0 +1,521 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #fff;
+    direction: rtl;
+}
+
+/* Auth Pages */
+.auth-body {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.auth-container {
+    z-index: 1;
+}
+
+.auth-card {
+    background: rgba(30, 30, 30, 0.8);
+    padding: 2rem;
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-card h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #bb86fc;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #333;
+}
+
+.tab {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab.active {
+    color: #bb86fc;
+    border-bottom: 2px solid #bb86fc;
+}
+
+.form {
+    display: none;
+}
+
+.form.active {
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #1e1e1e;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #bb86fc;
+    box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 1rem 0 0.5rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #bb86fc, #03dac6);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.error {
+    color: #cf6679;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Main App */
+.crud {
+    width: 95%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.head h2 {
+    text-align: center;
+    text-transform: uppercase;
+    margin: 1rem 0;
+    color: #bb86fc;
+    font-size: 2rem;
+    letter-spacing: 1px;
+}
+
+.inputs {
+    background: rgba(30, 30, 30, 0.7);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.inputs input, .inputs select {
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.price {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+}
+
+#total {
+    background: #03dac6;
+    color: #000;
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+#total::before {
+    content: "الإجمالي: ";
+}
+
+button {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #bb86fc, #03dac6);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 1rem 0;
+    transition: all 0.3s;
+}
+
+button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(187, 134, 252, 0.3);
+}
+
+.outputs {
+    margin: 1rem 0;
+}
+
+.searchBlock {
+    background: rgba(30, 30, 30, 0.7);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+#search {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #1e1e1e;
+    color: #fff;
+}
+
+.btnsearch {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btnsearch button {
+    flex: 1;
+    min-width: 150px;
+    margin: 0;
+}
+
+#deleteAll button {
+    background: #cf6679;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: rgba(30, 30, 30, 0.7);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: center;
+    border-bottom: 1px solid #333;
+}
+
+th {
+    background: #1e1e1e;
+    color: #bb86fc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tr:nth-child(even) {
+    background: rgba(50, 50, 50, 0.3);
+}
+
+tr:hover {
+    background: rgba(187, 134, 252, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .crud {
+        padding: 0.5rem;
+    }
+    .price {
+        grid-template-columns: 1fr;
+    }
+    .btnsearch button {
+        flex: 1 1 100%;
+    }
+}
+
+/* Admin Tips Box */
+.tips-box {
+    background: rgba(3, 218, 198, 0.1);
+    border-left: 4px solid #03dac6;
+    padding: 1rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+}
+
+.tips-box h3 {
+    color: #03dac6;
+    margin-bottom: 0.5rem;
+}
+
+/* Monthly Report */
+.report {
+    background: rgba(187, 134, 252, 0.1);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.report h3 {
+    color: #bb86fc;
+    margin-bottom: 1rem;
+}
+
+.report .stat {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}
+
+/* Checkbox & Notes */
+td input[type="checkbox"] {
+    transform: scale(1.3);
+    cursor: pointer;
+}
+
+.notes {
+    font-size: 0.875rem;
+    color: #aaa;
+    font-style: italic;
+}
+/* Profile Page Styles */
+.profile-card {
+    background: rgba(30,30,30,0.8);
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 600px;
+    margin: 2rem auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.profile-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #444;
+}
+
+.profile-section h3 {
+    color: #bb86fc;
+    margin-bottom: 1rem;
+}
+
+.categories-list {
+    list-style: none;
+    padding: 0;
+}
+
+.categories-list li {
+    background: #2a2a2a;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.categories-list li:hover {
+    transform: scale(1.02);
+    background: #3a3a3a;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.actions button {
+    margin: 0 10px;
+}
+
+/* Header Styles */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #1e1e1e;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.auth-buttons button, .user-info button {
+    margin-left: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #bb86fc;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.auth-buttons button:hover, .user-info button:hover {
+    background: #a370db;
+    transform: translateY(-2px);
+}
+
+#user-display-name {
+    margin-right: 20px;
+    font-weight: bold;
+    color: #03dac6;
+}
+/* Header غير ثابت */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #1e1e1e;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    /* بدون position: sticky */
+}
+
+/* أزرار الزوار */
+.auth-buttons button {
+    margin-left: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #bb86fc;
+    color: white;
+    cursor: pointer;
+}
+/* أيقونة المستخدم بعد الدخول */
+.user-avatar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.user-avatar:hover {
+    background: rgba(187, 134, 252, 0.2);
+}
+
+/* صورة المستخدم (تدعم GIF، PNG، JPG) */
+.avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%; /* يجعلها دائرية */
+    object-fit: cover; /* يمنع التشويه ويملأ المساحة */
+    background: #333; /* خلفية احتياطية لو الصورة فشلت */
+    border: 2px solid #bb86fc; /* إطار ناعم */
+}
+
+#user-first-name {
+    font-weight: bold;
+    color: #03dac6;
+    font-size: 1rem;
+}
+
+/* زرار صفحة البروفايل */
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 1.5rem;
+}
+
+.profile-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #bb86fc;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.profile-actions button:hover {
+    background: #a370db;
+    transform: translateY(-2px);
+}
+
+/* باقي الأنماط (profile-card, login-prompt, ...) */
+.profile-card {
+    background: rgba(30, 30, 30, 0.8);
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 600px;
+    margin: 2rem auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.profile-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #444;
+}
+
+.profile-section h3 {
+    color: #bb86fc;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.categories-list {
+    list-style: none;
+    padding: 0;
+}
+
+.categories-list li {
+    background: #2a2a2a;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.categories-list li:hover {
+    transform: scale(1.02);
+    background: #3a3a3a;
+}
+
+.login-prompt {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 16px;
+    max-width: 500px;
+    margin: 2rem auto;
+}
