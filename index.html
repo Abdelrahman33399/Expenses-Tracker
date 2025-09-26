@@ -187,13 +187,22 @@
                 <input onkeyup="getTotal()" type="number" placeholder="السعر" id="price" step="0.01">
                 <small id="total">0.00</small>
             </div>
-            <input type="number" placeholder="العدد (اختياري)" id="count" value="1" min="1">
             <select id="category"></select>
             <button id="submit">إضافة مصروف</button>
         </div>
 
         <div id="monthly-report" class="report" style="display:none;"></div>
-
+<!-- قسم تعديل المرتب في الصفحة الرئيسية -->
+<div id="salary-edit-section" class="report" style="display:none; margin-top: 1.5rem; padding: 1.5rem;">
+    <h3>💼 تعديل المرتب الشهري</h3>
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <label for="main-salary-input" style="font-weight: bold;">المرتب الجديد:</label>
+        <input type="number" id="main-salary-input" placeholder="أدخل مرتبك الشهري" style="padding: 8px; width: 180px; border-radius: 6px; border: 1px solid #444; background: #1e1e1e; color: white;">
+        <button onclick="updateSalaryFromMain()" style="padding: 8px 16px; background: linear-gradient(90deg, #ff9800, #ff5722); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+            حفظ المرتب
+        </button>
+    </div>
+</div>
         <div class="tips-box">
             <h3>💡 نصائح من الإدارة</h3>
             <p>• حاول تسجيل كل مصروف يوميًا قبل النوم.</p>
@@ -227,7 +236,6 @@
                         </tr>
                     </thead>
                     <tbody id="tbody">
-                        <!-- البيانات تُحمّل عبر JavaScript -->
                     </tbody>
                 </table>
             </div>
